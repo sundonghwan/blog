@@ -13,3 +13,10 @@ class UserBase(BaseModel):
     is_active: bool
     is_created_at : Optional[str]
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    class Config:
+        orm_mode = True
+def tokenResponse(token):
+    return {"access_token": token}
