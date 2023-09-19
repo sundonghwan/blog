@@ -17,6 +17,6 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 def tokenResponse(token):
     return {"access_token": token}

@@ -11,7 +11,7 @@ from database.setting import sessionLocal
 
 db = sessionLocal
 
-router = APIRouter()
+router = APIRouter(prefix="/account")
 
 @router.post("/login")
 async def login(login: UserLogin):
