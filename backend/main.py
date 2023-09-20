@@ -3,10 +3,10 @@ from fastapi import FastAPI
 from database import setting
 from database.manage import initDb
 from app.account import router
-app = FastAPI()
+from common.tags import tags_meta_data
+app = FastAPI(openapi_tags=tags_meta_data)
 
 app.include_router(router.account_api_router)
-
 
 @app.get("/health")
 def healthCheck():

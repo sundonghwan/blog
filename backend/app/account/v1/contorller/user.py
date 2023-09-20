@@ -22,3 +22,4 @@ def decode_jwt(token: str):
         return decodeToken if decodeToken["expires"] >= time.time() else {}
     except:
         return {}
+
