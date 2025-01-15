@@ -8,11 +8,14 @@ class Database:
         self.engine = create_engine(db_url)
         self.session = sessionmaker(autoflush=False, autocommit=False, bind=self.engine)
         self.Base = declarative_base()
+        
+    def init_db(self):
+        self.Base.metadata.create_all(bind=self.engine)
 
     def get_db(self):
         db = self.session()
         try:
-            yield db
+            yield db 
         finally:
             db.close()
 
