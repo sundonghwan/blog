@@ -169,3 +169,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+backend/venv
+backend/.env
+backend/config.ini
+blog.code-workspace
