@@ -172,3 +172,4 @@ cython_debug/
 backend/venv
 backend/.env
 backend/config.ini
+blog.code-workspace

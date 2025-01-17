@@ -13,6 +13,11 @@ class Settings:
     DATABASE_PASSWORD: int = os.getenv("DATABASE_PASSWORD")
     POSTGRESQL_DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
     
+    # JWT 설정
+    JWT_ALGORITHM: str = os.getenv("ALGORITHM")
+    JWT_ACCESS_TOKEN_TIME: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_TIME"))
+    JWT_REFRESH_TOKEN_TIME: int = int(os.getenv("REFRESH_TOKEN_EXPIRE_TIME"))
+    JWT_SECRET: str = os.getenv("JWT_SECRET")
 
 settings = Settings()
 
