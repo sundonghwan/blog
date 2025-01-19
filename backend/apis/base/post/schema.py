@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-class Blog(BaseModel):
+class Post(BaseModel):
     title: str
     contents: str
     author: str
@@ -10,10 +10,9 @@ class Blog(BaseModel):
     created_at: Optional['datetime'] = None
 
 
-class BlogUpdater(Blog):
+class PostUpdater(Post):
     id: str
 
 
-class BlogDelete(Blog):
+class PostDelete(Post):
     id: str
-    
