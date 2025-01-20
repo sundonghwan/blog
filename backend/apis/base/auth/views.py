@@ -7,6 +7,7 @@ from apis.base.auth.schema import UserRegister, User
 from apis.base.auth.controller import UserController, UserRegisterResponse, JWTService, verify_login_password, UserLogin
 from databases.connection import postgres_db
 from common.config import settings
+
 auth_router = APIRouter(prefix="/user")
 @auth_router.post("/register", response_model=UserRegisterResponse)
 async def user_register(request: UserRegister, db:Session = Depends(postgres_db.get_db)):
