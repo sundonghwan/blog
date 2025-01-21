@@ -1,5 +1,9 @@
 import re
+from functools import wraps
+from typing import Annotated
 import bcrypt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 from datetime import timedelta
@@ -7,6 +11,43 @@ import datetime
 import models
 from apis.base.auth.schema import *
 from databases.connection import postgres_db
+from common.config import settings
+scheme_name: Annotated[
+    Optional[str],
+    """
+    Security scheme name.
+
+    It will be included in the generated OpenAPI (e.g. visible at `/docs`).
+    """
+] = "JWTAuth?"
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="/v1/user/token", scheme_name=scheme_name)
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_schema)]):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Token is invalid or expired",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    try:
+        jwt_service = JWTService(
+        algorithm=settings.JWT_ALGORITHM,
+        secret_key=settings.JWT_SECRET,
+        access_token_expire_time=timedelta(minutes=settings.JWT_ACCESS_TOKEN_TIME),
+        refresh_token_expire_time=timedelta(hours=settings.JWT_REFRESH_TOKEN_TIME)
+    )
+        payload = jwt_service.decode_access_token(token=token)
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invaild authentication credentials",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        return email
+    
+    except JWTError:
+        raise credentials_exception
 
 def verify_pasword(password, password2):
     if len(password) < 8:
@@ -88,7 +129,7 @@ class JWTService:
     
     def create_refresh_token(self, data: dict):
         return self._create_token(data, self.refresh_token_expire_time)
-    
+
     def _create_token(self, data:dict, expires_delta: int):
         return self._encode(data, expires_delta, self.secret_key, self.algorithm)
     
@@ -98,6 +139,11 @@ class JWTService:
         if payload and payload["exp"] < now:
             return None
         return payload
+    
+    def decode_access_token(self, token: str):
+        return self._decode(token, self.secret_key, self.algorithm)
+    def decode_refresh_token(self, token: str):
+        return self._decode(token, self.secret_key, self.algorithm)
 
 class UserController:
     def __init__(self, db):
@@ -122,6 +168,6 @@ class UserController:
         return True, "회원 가입 완료"
     
     async def search(self, user: User):
-        email = user.email
+        email = user.username
         return self.db.query(models.User).filter(models.User.email==email).first()
 
