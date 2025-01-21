@@ -1,4 +1,5 @@
 import re
+from functools import wraps
 from typing import Annotated
 import bcrypt
 from fastapi import Depends, HTTPException, status
@@ -11,8 +12,15 @@ import models
 from apis.base.auth.schema import *
 from databases.connection import postgres_db
 from common.config import settings
+scheme_name: Annotated[
+    Optional[str],
+    """
+    Security scheme name.
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl="/user/token")
+    It will be included in the generated OpenAPI (e.g. visible at `/docs`).
+    """
+] = "JWTAuth?"
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="/v1/user/token", scheme_name=scheme_name)
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_schema)]):
     credentials_exception = HTTPException(
@@ -40,11 +48,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_schema)]):
     
     except JWTError:
         raise credentials_exception
-
-def jwt_required(func):
-    async def wrapper(*args, current_user: str =Depends(get_current_user), **kwargs):
-        return await func(*args, current_user=current_user, **kwargs)
-    return wrapper
 
 def verify_pasword(password, password2):
     if len(password) < 8:
@@ -165,6 +168,6 @@ class UserController:
         return True, "회원 가입 완료"
     
     async def search(self, user: User):
-        email = user.email
+        email = user.username
         return self.db.query(models.User).filter(models.User.email==email).first()
 
