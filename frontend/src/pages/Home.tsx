@@ -1,4 +1,8 @@
 // src/pages/Home.tsx
+import { Link } from 'react-router-dom'
+import PostCard from '../components/blog/PostCard'
+import { mockPosts } from '../data/mockPosts'
+import { ArrowRight } from 'lucide-react'
 
 const Home = () => {
   return (
@@ -67,7 +71,57 @@ const Home = () => {
       </section>
 
       {/* 여기에 다른 섹션들 추가 예정 */}
+      
       {/* - 최신 블로그 포스트 */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* 섹션 헤더 */}
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                최신 포스트
+              </h2>
+              <p className="text-slate-600 dark:text-slate-300">
+                최근에 작성한 글들을 확인해보세요
+              </p>
+            </div>
+            
+            {/* 더보기 버튼 */}
+            <Link
+              to="/blog"
+              className="hidden sm:flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:gap-3 transition-all font-medium"
+            >
+              <span>전체보기</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+
+          {/* 포스트 그리드 */}
+          {/* grid: 그리드 레이아웃 */}
+          {/* grid-cols-1: 모바일에서 1열 */}
+          {/* md:grid-cols-2: 중간 화면에서 2열 */}
+          {/* lg:grid-cols-3: 큰 화면에서 3열 */}
+          {/* gap-8: 간격 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* mockPosts 배열을 순회하며 PostCard 렌더링 */}
+            {mockPosts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+
+          {/* 모바일용 더보기 버튼 */}
+          <div className="mt-12 text-center sm:hidden">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            >
+              <span>전체보기</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
       {/* - Featured 프로젝트 */}
         </div>
     )

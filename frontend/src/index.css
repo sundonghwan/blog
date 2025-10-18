@@ -1,2 +1,93 @@
 @import "tailwindcss";
 @custom-variant dark (&:is(.dark *));
+
+/* Markdown 스타일 추가 */
+.markdown-content h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.markdown-content h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-top: 1.75rem;
+  margin-bottom: 0.875rem;
+  line-height: 1.3;
+}
+
+.markdown-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-content p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content code {
+  background-color: rgb(241 245 249);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'Courier New', monospace;
+}
+
+.dark .markdown-content code {
+  background-color: rgb(51 65 85);
+}
+
+.markdown-content pre {
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  background-color: transparent !important; /* 중요! */
+  padding: 0 !important; /* 중요! */
+}
+
+.markdown-content pre > div {
+  margin: 0 !important;
+  border-radius: 0.5rem !important;
+}
+
+
+.markdown-content blockquote {
+  border-left: 4px solid rgb(59 130 246);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: rgb(100 116 139);
+}
+
+.dark .markdown-content blockquote {
+  color: rgb(148 163 184);
+}
+
+.markdown-content strong {
+  font-weight: 700;
+}
+
+.markdown-content a {
+  color: rgb(59 130 246);
+  text-decoration: underline;
+}
+
+.markdown-content a:hover {
+  color: rgb(37 99 235);
+}

@@ -3,6 +3,9 @@ import { useEffect } from "react";
 import { useAppSelector } from "./store/hook";
 import Header from "./components/layout/Header";
 import Home from "./pages/Home";
+import BlogList from "./pages/blog/BlogList";
+import Footer from './components/layout/Footer' 
+import BlogDetail from "./pages/blog/BlogDetails";
 
 function App() {
   const mode = useAppSelector((state) => state.theme.mode)
@@ -24,9 +27,12 @@ function App() {
           } />
           
           <Route path="/blog" element={
-            <div className="p-8">Blog 페이지</div>
+            <BlogList />
           } />
-          
+          <Route path="blog/:id" element={
+            <BlogDetail />
+          } />
+
           <Route path="/projects" element={
             <div className="p-8">Projects 페이지</div>
           } />
@@ -35,6 +41,7 @@ function App() {
             <div className="p-8">About 페이지</div>
           } />
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   )
