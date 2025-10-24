@@ -4,8 +4,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hook'
 
 import { toggleTheme } from '../../store/slices/themeSlice'
-import { Moon, Sun, Search, Menu, User, LogOut } from 'lucide-react'  // User, LogOut 추가!
-import { useState } from 'react'  // 추가
+import { Moon, Sun, Search, Menu, User, LogOut } from 'lucide-react'
+import { useState } from 'react'
+import SearchModal from '../SearchModal'
 
 const Header = () => {
   const location = useLocation()
@@ -15,6 +16,8 @@ const Header = () => {
 
   // 드롭다운 상태
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showSearchModal, setShowSearchModal] = useState(false)
 
   // 관리자 로그인 확인
   const isAdmin = localStorage.getItem('isAdmin') === 'true'
@@ -76,7 +79,8 @@ const Header = () => {
           <div className="flex items-center space-x-2">
             
             {/* 검색 버튼 */}
-            <button 
+            <button
+              onClick={() => setShowSearchModal(true)}
               className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               aria-label="Search"
             >
@@ -142,6 +146,7 @@ const Header = () => {
 
             {/* 모바일 메뉴 버튼 */}
             <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               aria-label="Menu"
             >
@@ -149,7 +154,50 @@ const Header = () => {
             </button>
           </div>
         </div>
+
+        {/* 모바일 메뉴 */}
+        {showMobileMenu && (
+          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <nav className="px-4 py-3 space-y-1">
+              {navItems.map((item) => (
+                <Link key={item.path} to={item.path} onClick={() => setShowMobileMenu(false)}>
+                  <button
+                    className={`
+                      w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                      ${isActive(item.path)
+                        ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900'
+                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </button>
+                </Link>
+              ))}
+
+              {/* 모바일 로그인 버튼 */}
+              {!isAdmin && (
+                <Link
+                  to="/login"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="block w-full"
+                >
+                  <button className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium mt-2">
+                    <User className="h-4 w-4" />
+                    <span>로그인</span>
+                  </button>
+                </Link>
+              )}
+            </nav>
+          </div>
+        )}
       </div>
+
+      {/* 검색 모달 */}
+      <SearchModal
+        isOpen={showSearchModal}
+        onClose={() => setShowSearchModal(false)}
+      />
     </header>
   )
 }

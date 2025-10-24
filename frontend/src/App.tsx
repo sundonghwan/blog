@@ -4,12 +4,13 @@ import { useAppSelector } from "./store/hook";
 import Header from "./components/layout/Header";
 import Home from "./pages/Home";
 import BlogList from "./pages/blog/BlogList";
-import Footer from './components/layout/Footer' 
+import Footer from './components/layout/Footer'
 import AdminLayout from "./components/layout/AdminLayout";
 import BlogDetail from "./pages/blog/BlogDetails";
 import ProjectList from "./pages/project/ProjectList";
 import ProjectDetail from "./pages/project/ProjectDetail";
 import Login from "./pages/auth/Login";
+import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./pages/admin/DashBoard";
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/projects" element={<ProjectList />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
                 <Route path="/about" element={<About />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <Footer />

@@ -63,29 +63,30 @@ const ProjectManage = () => {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
             프로젝트 관리
           </h1>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
             총 {filteredProjects.length}개의 프로젝트
           </p>
         </div>
         <Link
           to="/admin/projects/new"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
-          <span>새 프로젝트 추가</span>
+          <span className="hidden sm:inline">새 프로젝트 추가</span>
+          <span className="sm:hidden">새 프로젝트</span>
         </Link>
       </div>
 
       {/* 검색 */}
-      <div className="mb-6">
-        <div className="relative max-w-md">
+      <div className="mb-6 justify-end flex">
+        <div className="relative w-full sm:max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <input
             type="text"
@@ -98,7 +99,7 @@ const ProjectManage = () => {
       </div>
 
       {/* 프로젝트 그리드 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {filteredProjects.length === 0 ? (
           <div className="col-span-full text-center py-20 text-slate-500 dark:text-slate-400">
             프로젝트가 없습니다

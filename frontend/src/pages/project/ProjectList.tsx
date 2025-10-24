@@ -77,7 +77,7 @@ const ProjectList = () => {
       </section>
 
       {/* 프로젝트 그리드 */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           
           {/* 결과 개수 */}
@@ -92,7 +92,7 @@ const ProjectList = () => {
             </div>
           ) : (
             /* 프로젝트 그리드 */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {filteredProjects.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

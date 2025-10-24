@@ -3,12 +3,13 @@ interface Post {
   id: number
   title: string
   excerpt: string
-  content?: string  // 추가!
+  content?: string
   coverImage: string
   category: string
   tags: string[]
   createdAt: string
   readTime: number
+  viewCount?: number
 }
 
 export const mockPosts: Post[] = [
@@ -62,7 +63,8 @@ React와 TypeScript를 사용하면 타입 안전한 블로그를 만들 수 있
     category: 'React',
     tags: ['React', 'TypeScript', 'Tailwind'],
     createdAt: '2025-10-10',
-    readTime: 5
+    readTime: 5,
+    viewCount: 1234
   },
   {
     id: 2,
@@ -107,7 +109,8 @@ def read_root():
     category: 'Backend',
     tags: ['Python', 'FastAPI', 'API'],
     createdAt: '2025-10-08',
-    readTime: 8
+    readTime: 8,
+    viewCount: 856
   },
   {
     id: 3,
@@ -150,6 +153,7 @@ CloudFront를 통해 HTTPS와 빠른 속도를 제공할 수 있습니다.
     category: 'DevOps',
     tags: ['AWS', 'S3', 'CloudFront'],
     createdAt: '2025-10-05',
-    readTime: 10
+    readTime: 10,
+    viewCount: 2103
   }
 ]
