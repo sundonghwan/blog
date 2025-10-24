@@ -1,87 +1,157 @@
-import {Link, useLocation} from "react-router-dom";
-import { Moon, Sun, Search, Menu } from 'lucide-react'
-import { useAppDispatch, useAppSelector } from "../../store/hook"; 
-import { toggleTheme } from "../../store/slices/themeSlice";
+// src/components/layout/Header.tsx
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
+import { useAppDispatch, useAppSelector } from '../../store/hook'
+
+import { toggleTheme } from '../../store/slices/themeSlice'
+import { Moon, Sun, Search, Menu, User, LogOut } from 'lucide-react'  // User, LogOut 추가!
+import { useState } from 'react'  // 추가
 
 const Header = () => {
-    const location = useLocation();
-    const dispatch = useAppDispatch();
-    const mode = useAppSelector((state) => state.theme.mode);
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const mode = useAppSelector((state) => state.theme.mode)
 
-    const isActive = (path: string) => {
-        return location.pathname === path ? 'text-blue-500' : 'hover:text-blue-500';
-    }
-    const handleThemeToggle = () => {
-        dispatch(toggleTheme())  // toggleTheme 액션 실행
-    }
+  // 드롭다운 상태
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
-    const navItems = [
-        { path: '/', label: 'Home' },
-        { path: '/blog', label: 'Blog' },
-        { path: '/projects', label: 'Projects' },
-        { path: '/about', label: 'About' }
-    ]
+  // 관리자 로그인 확인
+  const isAdmin = localStorage.getItem('isAdmin') === 'true'
 
-    return (
-        <header className=" top-0 w-full border-b border-slate-200 dark:border-slate-700">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                    <Link to="/" className="text-2xl font-bold">
-                        <span className="text-2xl font-bold text-gray-600 dark:text-slate-200">
-                            TechBlog
-                        </span>
+  const isActive = (path: string) => {
+    return location.pathname === path
+  }
+
+  const handleThemeToggle = () => {
+    dispatch(toggleTheme())
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAdmin')
+    setShowProfileMenu(false)
+    alert('로그아웃 되었습니다.')
+    navigate('/')
+  }
+
+  const navItems = [
+    { path: '/', label: 'Home' },
+    { path: '/blog', label: 'Blog' },
+    { path: '/projects', label: 'Projects' },
+    { path: '/about', label: 'About' },
+  ]
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          
+          {/* 로고 */}
+          <Link to="/" className="flex items-center space-x-2">
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              TechBlog
+            </span>
+          </Link>
+
+          {/* 네비게이션 - 데스크톱 */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
+              <Link key={item.path} to={item.path}>
+                <button
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                    ${isActive(item.path)
+                      ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }
+                  `}
+                >
+                  {item.label}
+                </button>
+              </Link>
+            ))}
+          </nav>
+
+          {/* 우측 액션 버튼들 */}
+          <div className="flex items-center space-x-2">
+            
+            {/* 검색 버튼 */}
+            <button 
+              className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+
+            {/* 다크모드 토글 */}
+            <button
+              onClick={handleThemeToggle}
+              className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {mode === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
+
+            {/* 프로필/로그인 버튼 */}
+            {isAdmin ? (
+              /* 관리자 로그인 상태 */
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  aria-label="Profile"
+                >
+                  <User className="h-5 w-5" />
+                </button>
+
+                {/* 드롭다운 메뉴 */}
+                {showProfileMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2">
+                    <Link
+                      to="/admin"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                    >
+                      <User className="w-4 h-4" />
+                      <span>관리자 대시보드</span>
                     </Link>
-                    <nav className="hidden md:flex items-center space-x-1">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.path}
-                                to={item.path}
-                                className={`
-                                px-4 py-2 text-sm hover:font-bold hover:text-gray-900 transition-colors
-                                ${isActive(item.path)
-                                    ? 'text-gray-600 dark:text-slate-200'
-                                    : 'text-gray-600 dark:text-slate-300 hover:bg-slate-100'
-                                }
-                                `}
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
-                    </nav>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>로그아웃</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* 로그인 안 한 상태 */
+              <Link
+                to="/login"
+                className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                <User className="h-4 w-4" />
+                <span>로그인</span>
+              </Link>
+            )}
 
-                    <div>
-                        <button 
-                        className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        aria-label="Search"
-                        >
-                            <Search className="h-5 w-5" />
-                        </button>
-                        <button
-                        onClick={handleThemeToggle}
-                        className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        aria-label="Toggle theme"
-                        >
-                            {/* 조건부 렌더링: mode에 따라 다른 아이콘 */}
-                            {mode === 'light' ? (
-                                <Moon className="h-5 w-5" />
-                            ) : (
-                                <Sun className="h-5 w-5" />
-                            )}
-                        </button>
-
-                        <button
-                        className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                        aria-label="Menu"
-                        >
-                        <Menu className="h-5 w-5" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
-    )
+            {/* 모바일 메뉴 버튼 */}
+            <button
+              className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+  )
 }
-
 
 export default Header
